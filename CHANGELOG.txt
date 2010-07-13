@@ -1,0 +1,20 @@
+0.7
+-----------------
+
+- added unittest2 examples contributed by Michael Foord 
+
+
+0.6
+-----------------
+
+- fix OSX related bugs that could cause the caller's environment to get
+  screwed (sorry).  tox was using the same file as virtualenv for tracking 
+  the Python executable dependency and there also was confusion wrt links. 
+  this should be fixed now. 
+
+- fix long description, thanks Michael Foord
+
+0.5
+-----------------
+
+- initial release 
