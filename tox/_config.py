@@ -285,8 +285,8 @@ class parseini:
         config.envlist, all_envs = self._getenvdata(reader, toxsection)
 
         # configure testenvs
-        known_factors = self._list_section_factors("testenv")
-        known_factors.update(default_factors)
+        known_factors = set(default_factors)
+        map(known_factors.update, [x.split("-") for x in config.envlist])
         known_factors.add("python")
         for name in all_envs:
             section = testenvprefix + name
@@ -300,14 +300,6 @@ class parseini:
                           for name in config.envlist)
 
         config.skipsdist = reader.getbool(toxsection, "skipsdist", all_develop)
-
-    def _list_section_factors(self, section):
-        factors = set()
-        if section in self._cfg:
-            for _, value in self._cfg[section].items():
-                exprs = re.findall(r'^([\w{},-]+)\:\s+', value, re.M)
-                factors.update(*mapcat(_split_factor_expr, exprs))
-        return factors
 
     def _makeenvconfig(self, name, section, subs, config):
         vc = VenvConfig(envname=name)

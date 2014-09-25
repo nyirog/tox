@@ -910,6 +910,20 @@ class TestConfigTestEnv:
         assert configs["py27"].setenv["X"] == "1"
         assert "X" not in configs["py26"].setenv
 
+    @pytest.mark.issue191
+    def test_conditional_factors_not_neccessary(self, newconfig):
+        inisource="""
+            [tox]
+            envlist = py27-{thread,greenlet}
+
+            [testenv]
+            commands = echo {envname}
+        """
+        configs = newconfig([], inisource).envconfigs
+        assert "py27-thread" in str(configs["py27-thread"].commands)
+        assert "py27-greenlet" in str(configs["py27-greenlet"].commands)
+        assert len(configs) == 2
+
 
 class TestGlobalOptions:
     def test_notest(self, newconfig):

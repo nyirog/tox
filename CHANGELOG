@@ -3,6 +3,8 @@
 
 - fix issue190: allow setenv to be empty.
 
+- fix issue191: factors are now defined by the "envlist" and
+  you don't need to use them in the testenv section anymore.
 
 1.8.0
 -----------
