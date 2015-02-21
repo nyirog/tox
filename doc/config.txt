@@ -86,6 +86,8 @@ Complete list of settings that you can put into ``testenv*`` sections:
     will be appended (and may contain another ``\`` character ...).
     For eventually performing a call to ``subprocess.Popen(args, ...)``
     ``args`` are determined by splitting the whole command by whitespace.
+    Similar to ``make`` recipe lines, any command with a leading ``-``
+    will ignore the exit code.
 
 .. confval:: install_command=ARGV
 
@@ -250,6 +252,16 @@ Complete list of settings that you can put into ``testenv*`` sections:
     uses pip's `-e` option, so should be avoided if you've specified a
     custom :confval:`install_command` that does not support ``-e``).
 
+    **default**: ``False``
+
+.. confval:: skip_install=BOOL
+
+    .. versionadded:: 1.9
+
+    Do not install the current package. This can be used when you need the
+    virtualenv management but do not want to install the current package
+    into that environment.
+    
     **default**: ``False``
 
 

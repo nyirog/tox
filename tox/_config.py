@@ -18,7 +18,7 @@ iswin32 = sys.platform == "win32"
 
 default_factors = {'jython': 'jython', 'pypy': 'pypy', 'pypy3': 'pypy3',
                    'py': sys.executable}
-for version in '24,25,26,27,30,31,32,33,34'.split(','):
+for version in '24,25,26,27,30,31,32,33,34,35'.split(','):
     default_factors['py' + version] = 'python%s.%s' % tuple(version)
 
 def parseconfig(args=None, pkg=None):
@@ -287,10 +287,18 @@ class parseini:
 
         config.envlist, all_envs = self._getenvdata(reader, toxsection)
 
-        # configure testenvs
+        # factors used in config or predefined
         known_factors = self._list_section_factors("testenv")
         known_factors.update(default_factors)
         known_factors.add("python")
+
+        # factors stated in config envlist
+        stated_envlist = reader.getdefault(toxsection, "envlist", replace=False)
+        if stated_envlist:
+            for env in _split_env(stated_envlist):
+                known_factors.update(env.split('-'))
+
+        # configure testenvs
         for name in all_envs:
             section = testenvprefix + name
             factors = set(name.split('-'))
@@ -394,6 +402,8 @@ class parseini:
              "'install_command' must contain '{packages}' substitution")
         vc.pip_pre = config.option.pre or reader.getbool(
             section, "pip_pre", False)
+
+        vc.skip_install = reader.getbool(section, "skip_install", False)
 
         return vc
 
