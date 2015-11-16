@@ -280,8 +280,8 @@ class VirtualEnv(object):
     def _install(self, deps, extraopts=None, action=None):
         if not deps:
             return
-        d = {}
-        l = []
+        deps_by_ixserver = {}
+        ixservers = []
         for dep in deps:
             if isinstance(dep, (str, py.path.local)):
                 dep = DepConfig(str(dep), None)
@@ -290,13 +290,13 @@ class VirtualEnv(object):
                 ixserver = self.envconfig.config.indexserver['default']
             else:
                 ixserver = dep.indexserver
-            d.setdefault(ixserver, []).append(dep.name)
-            if ixserver not in l:
-                l.append(ixserver)
+            deps_by_ixserver.setdefault(ixserver, []).append(dep.name)
+            if ixserver not in ixservers:
+                ixservers.append(ixserver)
             assert ixserver.url is None or isinstance(ixserver.url, str)
 
-        for ixserver in l:
-            packages = d[ixserver]
+        for ixserver in ixservers:
+            packages = deps_by_ixserver[ixserver]
             options = self._installopts(ixserver.url)
             if extraopts:
                 options.extend(extraopts)
