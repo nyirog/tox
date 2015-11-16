@@ -33,6 +33,7 @@ def get_plugin_manager():
     pm.add_hookspecs(hookspecs)
     pm.register(tox.config)
     pm.register(tox.interpreters)
+    pm.register(tox.session)
     pm.load_setuptools_entrypoints("tox")
     pm.check_pending()
     return pm

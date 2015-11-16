@@ -21,6 +21,12 @@ def tox_configure(config):
     thing purely before tox-2.0). """
 
 
+@hookspec
+def tox_setupenv(session, venv):
+    """ called after setting up the specified virtual environment but before
+    installing the package into it."""
+
+
 @hookspec(firstresult=True)
 def tox_get_python_executable(envconfig):
     """ return a python executable for the given python base name.

@@ -16,6 +16,7 @@ from tox.venv import VirtualEnv
 from tox.config import parseconfig
 from tox.result import ResultLog
 from subprocess import STDOUT
+from tox import hookimpl
 
 
 def now():
@@ -312,6 +313,11 @@ class Reporter(object):
     #    py.builtin.print_(msg, file=sys.stderr)
 
 
+@hookimpl
+def tox_setupenv(session, venv):
+    pass
+
+
 class Session:
 
     def __init__(self, config, popen=subprocess.Popen, Report=Reporter):
@@ -522,6 +528,7 @@ class Session:
             return
         for venv in self.venvlist:
             if self.setupenv(venv):
+                self.config.pluginmanager.hook.tox_setupenv(session=self, venv=venv)
                 if venv.envconfig.usedevelop:
                     self.developpkg(venv, self.config.setupdir)
                 elif self.config.skipsdist or venv.envconfig.skip_install:
